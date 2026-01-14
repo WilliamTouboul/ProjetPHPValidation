@@ -2,17 +2,17 @@
 
 class AvisManager
 {
-
     private $cnx;
 
     public function __construct($cnx)
     {
+        // Quand on instancie on prepare la connexion
         $this->setCnx($cnx);
     }
 
     public function createAvis(Avis $avis)
     {
-        // Preparation de la requete
+        // Requete de création.
         $sql = 'INSERT INTO avis
                 (avis, voyageID, clientID, toID) 
                 VALUES (:avis, :voyageID, :clientID, :toID)';
@@ -24,14 +24,14 @@ class AvisManager
         $req->bindValue(':clientID', $avis->getClientID(), PDO::PARAM_INT);
         $req->bindValue(':toID', 1, PDO::PARAM_INT);
 
+        // Éxecution et return du dernier ID créer pour avoir l'info.
         $req->execute();
-
-        // Return du dernier ID ajouté pour validation via 201
         return $this->cnx->lastInsertId();
     }
 
     public function readAllAvis()
     {
+        // Requete avec multiples jointures pour permettre l'affichage des informations et pas seulement des ID de chaque élément.
         $sql = 'SELECT a.avisID,
                    a.avis AS avisContent,
                    a.voyageID,
@@ -55,6 +55,7 @@ class AvisManager
         $req = $this->cnx->prepare($sql);
         $req->execute();
 
+        // Préparation du tableau pour sortir les infos.
         $avisArray = [];
 
         while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -62,29 +63,26 @@ class AvisManager
 
             $avis->setAvisID($data['avisID']);
             $avis->setAvisContent($data['avisContent']);
-
             $avis->setVoyageID($data['voyageID']);
             $avis->setClientID($data['clientID']);
-
-            // Infos enrichies
+            // Infos enrichis via jointures
             $avis->setClientPrenom($data['clientPrenom']);
             $avis->setClientNom($data['clientNom']);
             $avis->setClientEmail($data['clientEmail']);
-
             $avis->setVoyageTitre($data['voyageTitre']);
             $avis->setVoyageDescription($data['voyageDescription']);
-
             $avis->setTourOperatorName($data['tourOperatorName']);
 
+            // Alimentation de l'array
             $avisArray[] = $avis;
         }
 
         return $avisArray;
     }
 
-
     public function readAllAvisByVoyage(int $voyageID)
     {
+        // Requete similaire a la précédente en ajoutant "AND a.voyageID = :voyageID" pour ciblé par voyage.
         $sql = 'SELECT a.avisID,
                 a.avis AS avisContent,
                 a.voyageID,
@@ -119,14 +117,12 @@ class AvisManager
             $avis->setAvisContent($data['avisContent']);
             $avis->setVoyageID($data['voyageID']);
             $avis->setClientID($data['clientID']);
-
+            // Enrichissement de l'output via les jointures
             $avis->setClientPrenom($data['clientPrenom']);
             $avis->setClientNom($data['clientNom']);
             $avis->setClientEmail($data['clientEmail']);
-
             $avis->setVoyageTitre($data['voyageTitre']);
             $avis->setVoyageDescription($data['voyageDescription']);
-
             $avis->setTourOperatorName($data['tourOperatorName']);
 
             $avisArray[] = $avis;
@@ -134,7 +130,6 @@ class AvisManager
 
         return $avisArray;
     }
-
 
     public function updateAvis(Avis $avis)
     {
@@ -160,15 +155,14 @@ class AvisManager
                 WHERE avisID = :avisID
                 AND toID = 1
                 AND avisID NOT IN (1, 2)';
-
         $req = $this->cnx->prepare($sql);
-
         $req->bindValue(':avisID', $avisID, PDO::PARAM_INT);
 
         $req->execute();
     }
 
 
+    // Function Private de connexion
     private function setCnx(PDO $cnx)
     {
         $this->cnx = $cnx;

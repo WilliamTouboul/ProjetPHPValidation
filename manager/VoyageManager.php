@@ -31,6 +31,7 @@ class VoyageManager
 
     public function readVoyage(int $voyageID)
     {
+        // Requete de lecture avec jointure
         $sql = 'SELECT v.voyageID, v.titre, v.description,
             t.name AS tourOperatorName
             FROM voyage v
@@ -44,6 +45,7 @@ class VoyageManager
 
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
+        // Conditions pour renvoyer null si on ne trouve aucun voyage dans la DB
         if (!$data) {
             return null;
         }
@@ -60,6 +62,7 @@ class VoyageManager
 
     public function readAllVoyage()
     {
+        // Requete pour lire tout les voyages avec jointures
         $sql = 'SELECT v.voyageID, v.titre, v.description,
                 t.name AS tourOperatorName
                 FROM voyage v
@@ -70,6 +73,7 @@ class VoyageManager
         $req = $this->cnx->prepare($sql);
         $req->execute();
 
+        // Préparation d'un array pour stocké tout les voyages
         $voyages = [];
 
         while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -86,6 +90,7 @@ class VoyageManager
     }
 
 
+    // De meme que pour les autres, les IDs 1 et 2 ne doivent pas etre supprimable ou modifiable, d'ou l'ajout de "AND voyageID NOT IN (1, 2)'"
     public function updateVoyage(Voyage $voyage)
     {
         // Modification d'un voyage

@@ -1,18 +1,16 @@
 <?php
-
 class Client
 {
-
+    // Attributs
     private $clientID;
     private $prenom;
     private $nom;
     private $email;
     private $toID;
-    // Variable pour le nom aprés jointures
+    // Attributs pour enrichir aprés jointures
     private $toName;
 
-
-    // GETTER.
+    /* --------------------------------- GETTER --------------------------------- */
     public function getClientID()
     {
         return $this->clientID;
@@ -43,8 +41,7 @@ class Client
         return $this->toName;
     }
 
-    //SETTER
-
+    /* --------------------------------- SETTERS -------------------------------- */
     public function setClientID($clientID)
     {
         $this->clientID = $clientID;

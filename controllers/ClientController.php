@@ -11,7 +11,7 @@ class ClientController
 
     public function handle(string $method, ?string $id): void
     {
-        // GET /clients
+        // cas GET/Clients -> On les lits tous
         if ($method === 'GET' && $id === null) {
             $clients = $this->clientManager->readAllClient();
 
@@ -29,7 +29,7 @@ class ClientController
             $this->jsonResponse($out);
         }
 
-        // GET /clients/{id}
+        // cas GET/CLIENTS/ID on va chercher l'ID concerné
         if ($method === 'GET' && $id !== null) {
             $client = $this->clientManager->readClient((int)$id);
 
@@ -46,18 +46,21 @@ class ClientController
             ]);
         }
 
-        // POST /clients
+        // cas POST client, 
         if ($method === 'POST' && $id === null) {
             $body = $this->getJsonBody();
 
+            // Si tout est bien claire, on trim et prepare.
             $prenom = isset($body['prenom']) ? trim((string)$body['prenom']) : '';
             $nom    = isset($body['nom']) ? trim((string)$body['nom']) : '';
             $email  = isset($body['email']) ? trim((string)$body['email']) : '';
 
+            // Si un des champs est vide ( au cas ou il y ait un formulaire a terme. ) on renvoi un erreur.
             if ($prenom === '' || $nom === '' || $email === '') {
                 $this->jsonResponse(['error' => 'prenom, nom, email sont requis'], 400);
             }
 
+            // On créé un nouvel objet client qu'on rempli avec les infos et l'ajoute
             $client = new Client();
             $client->setPrenom($prenom);
             $client->setNom($nom);
@@ -67,7 +70,7 @@ class ClientController
             $this->jsonResponse(['status' => 'CREATED', 'clientID' => (int)$newId], 201);
         }
 
-        // PUT /clients/{id}
+        // Cas PUT/clients/ID pour modifié un client
         if ($method === 'PUT' && $id !== null) {
             $body = $this->getJsonBody();
 
@@ -85,7 +88,7 @@ class ClientController
             $this->jsonResponse(['status' => 'UPDATED']);
         }
 
-        // DELETE /clients/{id}
+        // Cas Suppression
         if ($method === 'DELETE' && $id !== null) {
             $this->clientManager->deleteClient((int)$id);
             $this->jsonResponse(['status' => 'DELETED']);

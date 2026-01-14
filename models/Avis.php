@@ -1,15 +1,13 @@
 <?php
-
 class Avis
 {
-
+    // Attributs
     private $avisID;
     private $text;
     private $voyageID;
     private $clientID;
     private $toID;
-
-    // Variable pour jointure :
+    // Attributs pour enrichissement aprés jointures 
     private $clientPrenom;
     private $clientNom;
     private $clientEmail;
@@ -17,9 +15,7 @@ class Avis
     private $voyageDescription;
     private $tourOperatorName;
 
-
-
-    // GETTER
+    /* --------------------------------- GETTERS -------------------------------- */
     public function getAvisID()
     {
         return $this->avisID;
@@ -45,7 +41,6 @@ class Avis
         return $this->toID;
     }
 
-    // Getter pour les jointures
     public function getClientPrenom()
     {
         return $this->clientPrenom;
@@ -73,7 +68,7 @@ class Avis
         return $this->tourOperatorName;
     }
 
-    // SETTER
+    /* --------------------------------- SETTERS -------------------------------- */
     public function setAvisID($avisID)
     {
         $this->avisID = $avisID;

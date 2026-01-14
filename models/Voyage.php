@@ -1,16 +1,16 @@
 <?php
-
 class Voyage
 {
+    // Attributs
     private $voyageID;
     private $titre;
     private $description;
     private $toID;
-
-    //Pour Jointures
+    // Attributs pour enrichir avec les jointures
     private $tourOperatorName;
 
-    // GETTERS
+
+    /* --------------------------------- GETTER --------------------------------- */
     public function getVoyageID()
     {
         return $this->voyageID;
@@ -36,8 +36,7 @@ class Voyage
         return $this->tourOperatorName;
     }
 
-    // SETTERS
-
+    /* --------------------------------- SETTERS -------------------------------- */
     public function setVoyageID($voyageID)
     {
         $this->voyageID = $voyageID;
@@ -57,7 +56,6 @@ class Voyage
     {
         $this->toID = $toID;
     }
-
 
     public function setTourOperatorName(string $tourOperatorName)
     {

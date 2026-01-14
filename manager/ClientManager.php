@@ -15,7 +15,7 @@ class ClientManager
 
     public function createClient(Client $client)
     {
-        // Preparation de la requete
+        // Requete de création
         $sql = 'INSERT INTO client
                 (prenom, nom, email, toID) 
                 VALUES (:prenom, :nom, :email, :toID)';
@@ -35,6 +35,7 @@ class ClientManager
 
     public function readClient(int $clientID)
     {
+        // Requete de lecture avec jointure pour une lecture plus naturelle et compléte
         $sql = 'SELECT c.clientID, c.prenom, c.nom, c.email,
                 t.name AS tourOperatorName
                 FROM client c
@@ -59,15 +60,13 @@ class ClientManager
         $client->setEmail($data['email']);
         $client->setToName($data['tourOperatorName']);
 
-
         return $client;
     }
 
 
     public function readAllClient()
     {
-        // Lister TOUS les clients
-        // REquete de tout les clients dans le scope "ToID=1"
+        // Requete de lecture de tout les clients avec jointure pour une lecture plus claire et un "WHERE c.toID 1" pour respecté l'énoncé.
         $sql = 'SELECT c.clientID, c.prenom, c.nom, c.email,
                 t.name AS tourOperatorName
                 FROM client c
@@ -103,7 +102,6 @@ class ClientManager
 
     public function updateClient(Client $client)
     {
-        // Modification d'un client
         $sql = 'UPDATE client
                 SET prenom = :prenom, nom = :nom, email = :email
                 WHERE clientID = :clientID
