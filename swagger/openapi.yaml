@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-   title: Certification PHP - API Tour Operator
+   title: Certification PHP - API Tour Operator - William Touboul
    version: 1.0.0
    description: >
       API REST de gestion de clients, avis et voyages pour un tour operator fais par William Touboul dans le cadre de la validation de la formation PHP/Back-end de Tuto.com
