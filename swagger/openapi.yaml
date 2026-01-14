@@ -1,0 +1,437 @@
+openapi: 3.0.3
+info:
+   title: Certification PHP - API Tour Operator
+   version: 1.0.0
+   description: >
+      API REST de gestion de clients, avis et voyages pour un tour operator fais par William Touboul dans le cadre de la validation de la formation PHP/Back-end de Tuto.com
+
+servers:
+   - url: http://127.0.0.1/edsa-CertificationPHP
+     description: Local (Apache)
+
+tags:
+   - name: Clients
+   - name: Voyages
+   - name: Avis
+
+paths:
+   /clients:
+      get:
+         tags: [Clients]
+         summary: Liste tous les clients (scope tour-opérateur 1)
+         responses:
+            "200":
+               description: Liste de clients
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: "#/components/schemas/Client"
+      post:
+         tags: [Clients]
+         summary: Crée un client (toID forcé à 1)
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/ClientCreate"
+         responses:
+            "201":
+               description: Client créé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/CreatedResponse"
+
+   /clients/{clientID}:
+      get:
+         tags: [Clients]
+         summary: Lit un client par ID
+         parameters:
+            - $ref: "#/components/parameters/ClientID"
+         responses:
+            "200":
+               description: Client trouvé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Client"
+            "404":
+               description: Client introuvable
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Error"
+      put:
+         tags: [Clients]
+         summary: Met à jour un client (IDs seed 1 et 2 non modifiables)
+         parameters:
+            - $ref: "#/components/parameters/ClientID"
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/ClientUpdate"
+         responses:
+            "200":
+               description: Client mis à jour
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+            "404":
+               description: Client introuvable
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Error"
+      delete:
+         tags: [Clients]
+         summary: Supprime un client (IDs seed 1 et 2 non supprimables)
+         parameters:
+            - $ref: "#/components/parameters/ClientID"
+         responses:
+            "200":
+               description: Client supprimé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+
+   /voyages:
+      get:
+         tags: [Voyages]
+         summary: Liste tous les voyages (scope tour-opérateur 1)
+         responses:
+            "200":
+               description: Liste de voyages
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: "#/components/schemas/Voyage"
+      post:
+         tags: [Voyages]
+         summary: Crée un voyage (toID forcé à 1)
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/VoyageCreate"
+         responses:
+            "201":
+               description: Voyage créé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/CreatedResponse"
+
+   /voyages/{voyageID}:
+      get:
+         tags: [Voyages]
+         summary: Lit un voyage par ID
+         parameters:
+            - $ref: "#/components/parameters/VoyageID"
+         responses:
+            "200":
+               description: Voyage trouvé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Voyage"
+            "404":
+               description: Voyage introuvable
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Error"
+      put:
+         tags: [Voyages]
+         summary: Met à jour un voyage (IDs seed 1 et 2 non modifiables)
+         parameters:
+            - $ref: "#/components/parameters/VoyageID"
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/VoyageUpdate"
+         responses:
+            "200":
+               description: Voyage mis à jour
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+      delete:
+         tags: [Voyages]
+         summary: Supprime un voyage (IDs seed 1 et 2 non supprimables)
+         parameters:
+            - $ref: "#/components/parameters/VoyageID"
+         responses:
+            "200":
+               description: Voyage supprimé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+
+   /avis:
+      get:
+         tags: [Avis]
+         summary: Liste les avis (optionnellement filtrés par voyageID)
+         parameters:
+            - in: query
+              name: voyageID
+              required: false
+              schema:
+                 type: integer
+                 minimum: 1
+              description: Filtre les avis pour un voyage donné
+         responses:
+            "200":
+               description: Liste d'avis
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: "#/components/schemas/Avis"
+      post:
+         tags: [Avis]
+         summary: Crée un avis (toID forcé à 1)
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/AvisCreate"
+         responses:
+            "201":
+               description: Avis créé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/CreatedResponse"
+
+   /avis/{avisID}:
+      put:
+         tags: [Avis]
+         summary: Met à jour un avis (avisID 1 et 2 non modifiables)
+         parameters:
+            - $ref: "#/components/parameters/AvisID"
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: "#/components/schemas/AvisUpdate"
+         responses:
+            "200":
+               description: Avis mis à jour
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+      delete:
+         tags: [Avis]
+         summary: Supprime un avis (avisID 1 et 2 non supprimables)
+         parameters:
+            - $ref: "#/components/parameters/AvisID"
+         responses:
+            "200":
+               description: Avis supprimé
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/StatusOK"
+
+components:
+   parameters:
+      ClientID:
+         in: path
+         name: clientID
+         required: true
+         schema:
+            type: integer
+            minimum: 1
+
+      VoyageID:
+         in: path
+         name: voyageID
+         required: true
+         schema:
+            type: integer
+            minimum: 1
+
+      AvisID:
+         in: path
+         name: avisID
+         required: true
+         schema:
+            type: integer
+            minimum: 1
+
+   schemas:
+      StatusOK:
+         type: object
+         properties:
+            status:
+               type: string
+               example: OK
+
+      CreatedResponse:
+         type: object
+         properties:
+            status:
+               type: string
+               example: CREATED
+            id:
+               type: integer
+               example: 3
+         description: Réponse générique de création (à adapter si tu renvoies clientID/voyageID/avisID)
+
+      Error:
+         type: object
+         properties:
+            error:
+               type: string
+               example: Not found
+
+      Client:
+         type: object
+         properties:
+            clientID:
+               type: integer
+               example: 1
+            prenom:
+               type: string
+               example: prenom 1
+            nom:
+               type: string
+               example: nom 1
+            email:
+               type: string
+               example: email1@mail.com
+            tourOperatorName:
+               type: string
+               example: tour operator 1
+
+      ClientCreate:
+         type: object
+         required: [prenom, nom, email]
+         properties:
+            prenom:
+               type: string
+            nom:
+               type: string
+            email:
+               type: string
+
+      ClientUpdate:
+         type: object
+         properties:
+            prenom:
+               type: string
+            nom:
+               type: string
+            email:
+               type: string
+
+      Voyage:
+         type: object
+         properties:
+            voyageID:
+               type: integer
+               example: 1
+            titre:
+               type: string
+               example: voyage 1
+            description:
+               type: string
+               example: description du voyage 1
+            tourOperatorName:
+               type: string
+               example: tour operator 1
+
+      VoyageCreate:
+         type: object
+         required: [titre, description]
+         properties:
+            titre:
+               type: string
+            description:
+               type: string
+
+      VoyageUpdate:
+         type: object
+         properties:
+            titre:
+               type: string
+            description:
+               type: string
+
+      Avis:
+         type: object
+         properties:
+            avisID:
+               type: integer
+               example: 1
+            avisContent:
+               type: string
+               example: avis 1
+            client:
+               type: object
+               properties:
+                  clientID:
+                     type: integer
+                     example: 1
+                  prenom:
+                     type: string
+                     example: prenom 1
+                  nom:
+                     type: string
+                     example: nom 1
+                  email:
+                     type: string
+                     example: email1@mail.com
+            voyage:
+               type: object
+               properties:
+                  voyageID:
+                     type: integer
+                     example: 1
+                  titre:
+                     type: string
+                     example: voyage 1
+                  description:
+                     type: string
+                     example: description du voyage 1
+            tourOperatorName:
+               type: string
+               example: tour operator 1
+
+      AvisCreate:
+         type: object
+         required: [avisContent, voyageID, clientID]
+         properties:
+            avisContent:
+               type: string
+            voyageID:
+               type: integer
+            clientID:
+               type: integer
+
+      AvisUpdate:
+         type: object
+         required: [avisContent, voyageID]
+         properties:
+            avisContent:
+               type: string
+            voyageID:
+               type: integer
