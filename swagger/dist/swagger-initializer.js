@@ -13,7 +13,12 @@ window.onload = function () {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-    layout: "StandaloneLayout"
+    layout: "StandaloneLayout",
+
+    operationsSorter: function (a, b) {
+      const order = { get: 1, post: 2, put: 3, delete: 4 };
+      return order[a.get("method")] - order[b.get("method")];
+    }
   });
 
   //</editor-fold>
