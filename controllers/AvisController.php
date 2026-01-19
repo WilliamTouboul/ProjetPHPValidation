@@ -25,14 +25,14 @@ class AvisController
                 $out[] = [
                     'avisID'                => $a->getAvisID(),
                     'content'               => $a->getAvisContent(),
-                    // 'voyageID'              => $a->getVoyageID(),
+                    'voyageID'              => $a->getVoyageID(),
                     'voyageTitre'           => $a->getVoyageTitre(),
                     'voyageDescription'     => $a->getVoyageDescription(),
-                    // 'clientID'              => $a->getClientID(),
+                    'clientID'              => $a->getClientID(),
                     'clientPrenom'          => $a->getClientPrenom(),
                     'clientNom'             => $a->getClientNom(),
                     'clientEmail'           => $a->getClientEmail(),
-                    // 'toID'                  => $a->getToID(),
+                    'toID'                  => $a->getToID(),
                     'tourOperatorName'      => $a->getTourOperatorName(),
                 ];
             }
@@ -84,6 +84,13 @@ class AvisController
                 $this->jsonResponse(['error' => 'avisContent/text et voyageID sont requis'], 400);
             }
 
+            if (in_array($voyageID, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
+
             $avis = new Avis();
             $avis->setAvisID($avisID);
 
@@ -99,6 +106,13 @@ class AvisController
 
         // DELETE /avis/{id}
         if ($method === 'DELETE' && $id !== null) {
+            $id = (int)$id;
+            if (in_array($id, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
             $this->avisManager->deleteAvis((int)$id);
             $this->jsonResponse(['status' => 'DELETED']);
         }
@@ -109,7 +123,8 @@ class AvisController
     private function jsonResponse($data, int $statusCode = 200): void
     {
         http_response_code($statusCode);
-        echo json_encode($data);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit;
     }
 

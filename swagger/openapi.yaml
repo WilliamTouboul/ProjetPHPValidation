@@ -18,11 +18,11 @@ servers:
 
 tags:
    - name: Clients
-     description: TEST
+     description: Ajouter, Modifier, Supprimer et Lire un ou des clients
    - name: Voyages
-     description: TEST
+     description: Ajouter, Modifier, Supprimer et Lire un ou des voyages
    - name: Avis
-     description: TEST
+     description: Ajouter, Modifier, Supprimer et Lire un ou des avis
 
 paths:
    # =========================================================
@@ -78,7 +78,7 @@ paths:
    /clients/{clientID}:
       get:
          tags: [Clients]
-         summary: /readClient - Permet l'affichage d'un client selon l'ID fourni
+         summary: Permet l'affichage d'un client selon l'ID fourni
          parameters:
             - in: path
               name: clientID
@@ -100,7 +100,7 @@ paths:
 
       put:
          tags: [Clients]
-         summary: /updateClient - Permet la modification d'un client déja enregistré (Comme demandé, ID 1 & 2 non modifiable )
+         summary: Permet la modification d'un client déja enregistré (Comme demandé, ID 1 & 2 non modifiable )
          parameters:
             - in: path
               name: clientID
@@ -137,12 +137,14 @@ paths:
                               example: UPDATED
             "400":
                description: "Tout les champs sont obligatoires"
+            "403":
+               description: "ID protégés"
             "405":
                description: "Methode non autorisé"
 
       delete:
          tags: [Clients]
-         summary: /deleteClient - Permet la suppression d'un client (Comme demandé, ID 1 & 2 non supprimable )
+         summary: /Permet la suppression d'un client (Comme demandé, ID 1 & 2 non supprimable )
          parameters:
             - in: path
               name: clientID
@@ -155,6 +157,8 @@ paths:
                description: "Client supprimé"
             "400":
                description: "Tous les champs sont obligatoires"
+            403":
+               description: "ID protégés"
             "405":
                description: "Methode non autorisé"
 
@@ -165,7 +169,7 @@ paths:
    /voyages:
       get:
          tags: [Voyages]
-         summary: /readAllVoyages - Permet l'affichage de tous les voyages
+         summary: Permet l'affichage de tous les voyages
          responses:
             "200":
                description: Liste de voyages
@@ -182,7 +186,7 @@ paths:
 
       post:
          tags: [Voyages]
-         summary: /createVoyage - Permet d'insérer des nouveaux voyages
+         summary: Permet d'insérer des nouveaux voyages
          requestBody:
             required: true
             content:
@@ -208,7 +212,7 @@ paths:
    /voyages/{voyageID}:
       get:
          tags: [Voyages]
-         summary: /readVoyage - permet l'affichage d'un seul voyage
+         summary: Afficher un voyage
          parameters:
             - in: path
               name: voyageID
@@ -230,7 +234,7 @@ paths:
 
       put:
          tags: [Voyages]
-         summary: PUT - Modifier un voyage (IDs 1 et 2 non modifiables)
+         summary: Modifier un voyage (IDs 1 et 2 non modifiables)
          parameters:
             - in: path
               name: voyageID
@@ -262,10 +266,16 @@ paths:
                            status:
                               type: string
                               example: UPDATED
+            "403":
+               description: "ID protégés"
+            "404":
+               description: "Voyage introuvable"
+            "405":
+               description: "Methode non autorisé"
 
       delete:
          tags: [Voyages]
-         summary: DELETE - Supprimer un voyage (IDs 1 et 2 non supprimables)
+         summary: Supprimer un voyage (IDs 1 et 2 non supprimables)
          parameters:
             - in: path
               name: voyageID
@@ -284,6 +294,12 @@ paths:
                            status:
                               type: string
                               example: DELETED
+            "403":
+               description: "ID protégés"
+            "404":
+               description: "Voyage introuvable"
+            "405":
+               description: "Methode non autorisé"
 
    # =========================================================
    # AVIS
@@ -292,7 +308,7 @@ paths:
    /avis:
       get:
          tags: [Avis]
-         summary: /readAllAvis ou /readAllAvisByVoyage selon si un ID est fourni ou non.
+         summary: AFficher un ou plusieurs avis selon si un ID de voyage est fourni ou non.
          parameters:
             - in: query
               name: voyageID
@@ -311,7 +327,7 @@ paths:
 
       post:
          tags: [Avis]
-         summary: /CreateAvis - Permet de créer un nouvel avis
+         summary: Permet de créer un nouvel avis
          requestBody:
             required: true
             content:
@@ -351,7 +367,7 @@ paths:
    /avis/{avisID}:
       put:
          tags: [Avis]
-         summary: /updateAvis - Permet la modification d'un avis (Sauf les avis 1 et 2, comme demandé )
+         summary: Permet la modification d'un avis (Sauf les avis 1 et 2, comme demandé )
          parameters:
             - in: path
               name: avisID
@@ -386,12 +402,14 @@ paths:
                               example: UPDATED
             "400":
                description: "Tous les champs sont obligatoires"
+            "403":
+               description: "IDs Protégés"
             "405":
                description: "methode non autorisés"
 
       delete:
          tags: [Avis]
-         summary: /deleteAvis - Permet la suppression d'un avis (Sauf les avis 1 et 2)
+         summary: Permet la suppression d'un avis (Sauf les avis 1 et 2)
          parameters:
             - in: path
               name: avisID
@@ -412,6 +430,8 @@ paths:
                               example: DELETED
             "400":
                description: "Tous les champs sont obligatoires"
+            "403":
+               description: "IDs Protégés"
             "405":
                description: "Méthode non autorisés"
 

@@ -66,7 +66,16 @@ class VoyageController
 
         // PUT /voyages/{id}
         if ($method === 'PUT' && $id !== null) {
+            $id = (int)$id;
             $body = $this->getJsonBody();
+
+            if (in_array($id, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
+
 
             $voyage = $this->voyageManager->readVoyage((int)$id);
             if ($voyage === null) {
@@ -87,17 +96,25 @@ class VoyageController
 
         // DELETE /voyages/{id}
         if ($method === 'DELETE' && $id !== null) {
+            $id = (int)$id;
+            if (in_array($id, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
+
             $this->voyageManager->deleteVoyage((int)$id);
             $this->jsonResponse(['status' => 'DELETED']);
         }
 
         $this->jsonResponse(['error' => 'Route voyages not found'], 404);
     }
-
     private function jsonResponse($data, int $statusCode = 200): void
     {
         http_response_code($statusCode);
-        echo json_encode($data);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit;
     }
 

@@ -48,6 +48,7 @@ class ClientController
 
         // cas POST client, 
         if ($method === 'POST' && $id === null) {
+
             $body = $this->getJsonBody();
 
             // Si tout est bien claire, on trim et prepare.
@@ -72,12 +73,21 @@ class ClientController
 
         // Cas PUT/clients/ID pour modifié un client
         if ($method === 'PUT' && $id !== null) {
+            $id = (int)$id;
             $body = $this->getJsonBody();
+
+            if (in_array($id, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
 
             $client = $this->clientManager->readClient((int)$id);
             if ($client === null) {
                 $this->jsonResponse(['error' => 'Client not found'], 404);
             }
+
 
             if (isset($body['prenom'])) $client->setPrenom(trim((string)$body['prenom']));
             if (isset($body['nom']))    $client->setNom(trim((string)$body['nom']));
@@ -90,6 +100,13 @@ class ClientController
 
         // Cas Suppression
         if ($method === 'DELETE' && $id !== null) {
+            $id = (int)$id;
+            if (in_array($id, [1, 2], true)) {
+                $this->jsonResponse([
+                    "status" => "FORBIDDEN",
+                    "message" => "ID protégé"
+                ], 403);
+            }
             $this->clientManager->deleteClient((int)$id);
             $this->jsonResponse(['status' => 'DELETED']);
         }
@@ -100,7 +117,8 @@ class ClientController
     private function jsonResponse($data, int $statusCode = 200): void
     {
         http_response_code($statusCode);
-        echo json_encode($data);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit;
     }
 
